@@ -9,8 +9,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mechanman.mechanman_development_facility.StartActivity">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="連線"
+        android:id="@+id/linkButton"
+        android:layout_marginBottom="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="沖片記錄"
+        android:id="@+id/developHistory"
+        android:layout_above="@+id/linkButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp" />
 </RelativeLayout>
