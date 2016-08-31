@@ -33,7 +33,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(StartActivity.this, MainActivity.class);
+                intent.setClass(StartActivity.this, bluetoothConnect.class);
                 startActivity(intent);
                 //StartActivity.this.finish();
             }
