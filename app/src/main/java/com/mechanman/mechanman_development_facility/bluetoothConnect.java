@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
 import java.util.Set;
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class bluetoothConnect extends AppCompatActivity {
 
     private void pairedDevicesList() {
         pairedDevices = myBluetooth.getBondedDevices();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
 
         if(pairedDevices.size() > 0) {
             for(BluetoothDevice bt : pairedDevices) {
@@ -67,9 +68,9 @@ public class bluetoothConnect extends AppCompatActivity {
         public void onItemClick(AdapterView av, View v, int arg2, long ard3) {
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
-            Intent i = new Intent(bluetoothConnect.this, MainActivity.class);
-            i.putExtra(EXTRA_ADDRESS, address);
-            startActivity(i);
+            Intent intent = new Intent(bluetoothConnect.this, MainActivity.class);
+            intent.putExtra(EXTRA_ADDRESS, address);
+            startActivity(intent);
         }
     };
 }

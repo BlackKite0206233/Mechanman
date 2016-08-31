@@ -10,12 +10,125 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mechanman.mechanman_development_facility.MainActivity">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="main"
-        android:id="@+id/textView2"
+        android:text="預濕"
+        android:id="@+id/prewetting"
+        android:layout_marginTop="46dp"
+        android:width="180dp"
+        android:textSize="10pt"
+        android:height="60dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginEnd="36dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="顯影"
+        android:id="@+id/development"
+        android:width="180dp"
+        android:textSize="10pt"
+        android:height="60dp"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/prewetting"
+        android:layout_alignLeft="@+id/prewetting"
+        android:layout_alignStart="@+id/prewetting"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="急制"
+        android:id="@+id/stopBath"
+        android:width="180dp"
+        android:textSize="10pt"
+        android:height="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/development"
+        android:layout_alignLeft="@+id/development"
+        android:layout_alignStart="@+id/development"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="定影"
+        android:id="@+id/Fixer"
+        android:width="180dp"
+        android:textSize="10pt"
+        android:height="60dp"
+        android:layout_below="@+id/stopBath"
+        android:layout_alignLeft="@+id/stopBath"
+        android:layout_alignStart="@+id/stopBath"
+        android:layout_marginTop="27dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EXIT"
+        android:id="@+id/EXIT"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/Fixer"
+        android:layout_alignEnd="@+id/Fixer"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prewettingTXT"
+        android:layout_marginRight="36dp"
+        android:layout_marginEnd="36dp"
+        android:width="40dp"
+        android:textSize="8pt"
+        android:layout_alignBottom="@+id/prewetting"
+        android:layout_toLeftOf="@+id/prewetting"
+        android:layout_toStartOf="@+id/prewetting"
+        android:cursorVisible="true"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="false"
+        android:inputType="number"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/stopBathTXT"
+        android:width="40dp"
+        android:textSize="8pt"
+        android:editable="true"
+        android:enabled="true"
+        android:cursorVisible="true"
+        android:layout_alignBottom="@+id/stopBath"
+        android:layout_alignLeft="@+id/prewettingTXT"
+        android:layout_alignStart="@+id/prewettingTXT"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/fixerTXT"
+        android:width="40dp"
+        android:textSize="8pt"
+        android:editable="true"
+        android:enabled="true"
+        android:cursorVisible="true"
+        android:layout_alignBottom="@+id/Fixer"
+        android:layout_alignLeft="@+id/stopBathTXT"
+        android:layout_alignStart="@+id/stopBathTXT"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="set"
+        android:id="@+id/setting"
+        android:textSize="5pt"
+        android:width="50dp"
+        android:minWidth="0dp"
+        android:layout_alignBottom="@+id/development"
+        android:layout_alignRight="@+id/prewettingTXT"
+        android:layout_alignEnd="@+id/prewettingTXT"/>
 </RelativeLayout>
