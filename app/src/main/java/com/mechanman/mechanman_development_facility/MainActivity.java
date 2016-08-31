@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,17 +16,16 @@ public class MainActivity extends AppCompatActivity {
     private Button fixer;
     private Button exit;
 
+    private EditText prewettingTXT;
+    private EditText stopBathTXT;
+    private EditText fixerTXT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prewetting = (Button)findViewById(R.id.prewetting);
-        development = (Button)findViewById(R.id.development);
-        setting = (Button)findViewById(R.id.setting);
-        stopBath = (Button)findViewById(R.id.stopBath);
-        fixer = (Button)findViewById(R.id.Fixer);
-        exit = (Button)findViewById(R.id.EXIT);
+        init();
 
         prewetting.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -73,5 +73,18 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void init() {
+        prewetting = (Button)findViewById(R.id.prewetting);
+        development = (Button)findViewById(R.id.development);
+        setting = (Button)findViewById(R.id.setting);
+        stopBath = (Button)findViewById(R.id.stopBath);
+        fixer = (Button)findViewById(R.id.Fixer);
+        exit = (Button)findViewById(R.id.EXIT);
+
+        prewettingTXT = (EditText)findViewById(R.id.prewettingTXT);
+        stopBathTXT = (EditText)findViewById(R.id.stopBathTXT);
+        fixerTXT = (EditText)findViewById(R.id.fixerTXT);
     }
 }

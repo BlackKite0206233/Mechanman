@@ -58,13 +58,12 @@ public class bluetoothConnect extends AppCompatActivity {
                 "No paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
+        final ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
         bluetoothDeviceList.setAdapter(adapter);
         bluetoothDeviceList.setOnItemClickListener(listClickListener);
     }
 
-    private AdapterView.OnItemClickListener listClickListener = new  AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener listClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView av, View v, int arg2, long ard3) {
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
