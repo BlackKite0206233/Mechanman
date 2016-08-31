@@ -87,8 +87,10 @@
         android:cursorVisible="true"
         android:editable="true"
         android:enabled="true"
-        android:focusable="false"
-        android:inputType="number"/>
+        android:focusable="true"
+        android:inputType="number"
+        android:ems="10"
+        android:text="60"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -103,7 +105,8 @@
         android:cursorVisible="true"
         android:layout_alignBottom="@+id/stopBath"
         android:layout_alignLeft="@+id/prewettingTXT"
-        android:layout_alignStart="@+id/prewettingTXT"/>
+        android:layout_alignStart="@+id/prewettingTXT"
+        android:text="30"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -118,7 +121,8 @@
         android:cursorVisible="true"
         android:layout_alignBottom="@+id/Fixer"
         android:layout_alignLeft="@+id/stopBathTXT"
-        android:layout_alignStart="@+id/stopBathTXT"/>
+        android:layout_alignStart="@+id/stopBathTXT"
+        android:text="240"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -131,4 +135,37 @@
         android:layout_alignBottom="@+id/development"
         android:layout_alignRight="@+id/prewettingTXT"
         android:layout_alignEnd="@+id/prewettingTXT"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sec"
+        android:id="@+id/textView2"
+        android:allowUndo="false"
+        android:layout_alignBottom="@+id/prewettingTXT"
+        android:layout_toRightOf="@+id/setting"
+        android:layout_toEndOf="@+id/setting"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sec"
+        android:id="@+id/textView4"
+        android:allowUndo="false"
+        android:layout_alignBottom="@+id/stopBath"
+        android:layout_toRightOf="@+id/stopBathTXT"
+        android:layout_toEndOf="@+id/stopBathTXT"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sec"
+        android:id="@+id/textView5"
+        android:allowUndo="false"
+        android:layout_alignBottom="@+id/Fixer"
+        android:layout_toRightOf="@+id/fixerTXT"
+        android:layout_toEndOf="@+id/fixerTXT"
+        android:layout_marginBottom="15dp"/>
 </RelativeLayout>
