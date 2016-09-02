@@ -1,5 +1,8 @@
 package com.mechanman.mechanman_development_facility;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +26,7 @@ public class bluetoothConnect extends AppCompatActivity {
     private BluetoothAdapter myBluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +34,16 @@ public class bluetoothConnect extends AppCompatActivity {
         setContentView(R.layout.activity_bluetooth_connect);
         bluetoothDeviceList = (ListView)findViewById(R.id.bluetoothDeviceList);
 
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
         if(myBluetooth != null) {
             if(myBluetooth.isEnabled()) {
+                myBluetooth.startDiscovery();
+                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(myReceiver, filter);
                 pairedDevicesList();
+
             } else {
                 Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(intent, 1);
@@ -47,20 +57,16 @@ public class bluetoothConnect extends AppCompatActivity {
 
     private void pairedDevicesList() {
         pairedDevices = myBluetooth.getBondedDevices();
-        ArrayList<String> list = new ArrayList<String>();
+        //ArrayList<String> list = new ArrayList<String>();
 
         if(pairedDevices.size() > 0) {
             for(BluetoothDevice bt : pairedDevices) {
-                list.add(bt.getName() + "\n" + bt.getAddress());
+                adapter.add(bt.getName() + "\n" + bt.getAddress());
             }
-        } else {
-            Toast.makeText(getApplicationContext(),
-                "No paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
         }
-
-        final ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
         bluetoothDeviceList.setAdapter(adapter);
         bluetoothDeviceList.setOnItemClickListener(listClickListener);
+
     }
 
     private AdapterView.OnItemClickListener listClickListener = new AdapterView.OnItemClickListener() {
@@ -70,6 +76,24 @@ public class bluetoothConnect extends AppCompatActivity {
             Intent intent = new Intent(bluetoothConnect.this, MainActivity.class);
             intent.putExtra(EXTRA_ADDRESS, address);
             startActivity(intent);
+            finish();
         }
     };
+
+    private final BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            adapter = new ArrayAdapter<String>(bluetoothConnect.this, android.R.layout.simple_list_item_1);
+            //ArrayList<String> list = new ArrayList<String>();
+            String action = intent.getAction();
+            if(BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                adapter.add(device.getName() + "\n" + device.getAddress());
+            }
+            //ArrayAdapter adapter = new ArrayAdapter<String>(bluetoothConnect.this, android.R.layout.simple_list_item_1, list);
+            bluetoothDeviceList.setAdapter(adapter);
+            bluetoothDeviceList.setOnItemClickListener(listClickListener);
+        }
+    };
+
 }
