@@ -15,12 +15,12 @@
         android:layout_height="wrap_content"
         android:text="預濕"
         android:id="@+id/prewetting"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="100dp"
         android:width="180dp"
         android:textSize="10pt"
         android:height="60dp"
         android:layout_marginRight="36dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="20dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
@@ -33,7 +33,7 @@
         android:width="180dp"
         android:textSize="10pt"
         android:height="60dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/prewetting"
         android:layout_alignLeft="@+id/prewetting"
         android:layout_alignStart="@+id/prewetting"/>
@@ -46,7 +46,7 @@
         android:width="180dp"
         android:textSize="10pt"
         android:height="60dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/development"
         android:layout_alignLeft="@+id/development"
         android:layout_alignStart="@+id/development"/>
@@ -62,7 +62,7 @@
         android:layout_below="@+id/stopBath"
         android:layout_alignLeft="@+id/stopBath"
         android:layout_alignStart="@+id/stopBath"
-        android:layout_marginTop="27dp"/>
+        android:layout_marginTop="20dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -71,7 +71,9 @@
         android:id="@+id/EXIT"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/Fixer"
-        android:layout_alignEnd="@+id/Fixer"/>
+        android:layout_alignEnd="@+id/Fixer"
+        android:layout_marginRight="-10dp"
+        android:layout_marginBottom="10dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -90,7 +92,8 @@
         android:focusable="true"
         android:inputType="number"
         android:ems="10"
-        android:text="60"/>
+        android:text="60"
+        android:layout_marginBottom="5dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -106,7 +109,8 @@
         android:layout_alignBottom="@+id/stopBath"
         android:layout_alignLeft="@+id/prewettingTXT"
         android:layout_alignStart="@+id/prewettingTXT"
-        android:text="30"/>
+        android:text="30"
+        android:layout_marginBottom="5dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -122,7 +126,8 @@
         android:layout_alignBottom="@+id/Fixer"
         android:layout_alignLeft="@+id/stopBathTXT"
         android:layout_alignStart="@+id/stopBathTXT"
-        android:text="240"/>
+        android:text="240"
+        android:layout_marginBottom="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -134,7 +139,9 @@
         android:minWidth="0dp"
         android:layout_alignBottom="@+id/development"
         android:layout_alignRight="@+id/prewettingTXT"
-        android:layout_alignEnd="@+id/prewettingTXT"/>
+        android:layout_alignEnd="@+id/prewettingTXT"
+        android:layout_marginRight="-4dp"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -156,7 +163,7 @@
         android:layout_alignBottom="@+id/stopBath"
         android:layout_toRightOf="@+id/stopBathTXT"
         android:layout_toEndOf="@+id/stopBathTXT"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -167,5 +174,17 @@
         android:layout_alignBottom="@+id/Fixer"
         android:layout_toRightOf="@+id/fixerTXT"
         android:layout_toEndOf="@+id/fixerTXT"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/timeCount"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:textSize="14pt"
+        />
+
 </RelativeLayout>
