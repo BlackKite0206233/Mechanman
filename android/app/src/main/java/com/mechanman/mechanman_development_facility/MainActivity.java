@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private int rememberStatus = 0;
 
     protected int prewettingTime;
-    protected int developTotalTime;
-    protected int developStopTime;
-    protected int developRollingTime;
-    protected int developRollingSpeed;
+    protected int developTotalTime = 0;
+    protected int developStopTime = 0;
+    protected int developRollingTime = 0;
+    protected int developRollingSpeed = 0;
     protected int stopBathTime;
     protected int fixerTime;
 
@@ -44,6 +44,21 @@ public class MainActivity extends AppCompatActivity {
 
     CountDownTimerPausable countDownTimerPausable;
     NumberFormat numberFormat;
+    Intent intent = new Intent();
+
+    //Intent intent = getIntent();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                developTotalTime = data.getExtras().getInt("developTotalTime");
+                developStopTime = data.getExtras().getInt("developStopTime");
+                developRollingTime = data.getExtras().getInt("developRollingTime");
+                developRollingSpeed = data.getExtras().getInt("developRollingSpeed");
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,18 +83,24 @@ public class MainActivity extends AppCompatActivity {
         development.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> List = new ArrayList<Integer>();
-                assignWork(development, "顯影", "暫停", 2, List);
-                List.clear();
+                if(developTotalTime != 0) {
+                    ArrayList<Integer> List = new ArrayList<Integer>();
+                    List.add(developTotalTime);
+                    List.add(developStopTime);
+                    List.add(developRollingTime);
+                    List.add(developRollingSpeed);
+                    assignWork(development, "顯影", "暫停", 2, List);
+                    List.clear();
+                }
             }
         });
 
         setting.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
                 intent.setClass(MainActivity.this, setDevelopTime.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
+                //startActivity(intent);
             }
         });
 

@@ -125,7 +125,8 @@
         android:enabled="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/textView12"
-        android:layout_toStartOf="@+id/textView12"/>
+        android:layout_toStartOf="@+id/textView12"
+        android:text="600"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -162,7 +163,8 @@
         android:layout_toEndOf="@+id/textView11"
         android:enabled="true"
         android:editable="true"
-        android:layout_marginBottom="-10dp"/>
+        android:layout_marginBottom="-10dp"
+        android:text="50"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -200,7 +202,8 @@
         android:layout_toRightOf="@+id/textView13"
         android:layout_toEndOf="@+id/textView13"
         android:layout_marginLeft="1dp"
-        android:layout_marginBottom="-10dp"/>
+        android:layout_marginBottom="-10dp"
+        android:text="10"/>
 
     <TextView
         android:layout_width="wrap_content"

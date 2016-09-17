@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class setDevelopTime extends AppCompatActivity {
 
@@ -24,6 +27,11 @@ public class setDevelopTime extends AppCompatActivity {
 
     private Button back;
 
+    private String Speed = "1";
+
+    private String[] speed = {"1", "2", "3", "4", "5"};
+    ArrayAdapter<String> speedList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +42,28 @@ public class setDevelopTime extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent();
-                intent.setClass(setDevelopTime.this, MainActivity.class);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putInt("developTotalTime", Integer.parseInt(totalTime.getText().toString()));
+                bundle.putInt("developStopTime", Integer.parseInt(stopTime.getText().toString()));
+                bundle.putInt("developRollingTime", Integer.parseInt(rollingTime.getText().toString()));
+                bundle.putInt("developRollingSpeed", Integer.parseInt(Speed));
+                intent.putExtras(bundle);
+                setDevelopTime.this.setResult(RESULT_OK, intent);
                 finish();
+            }
+        });
+
+        rollingSpeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Speed = speed[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
@@ -56,5 +82,8 @@ public class setDevelopTime extends AppCompatActivity {
         rollingSpeed = (Spinner)findViewById(R.id.rollingSpeed);
 
         back = (Button)findViewById(R.id.back);
+
+        speedList = new ArrayAdapter<String>(setDevelopTime.this, android.R.layout.simple_spinner_item, speed);
+        rollingSpeed.setAdapter(speedList);
     }
 }
