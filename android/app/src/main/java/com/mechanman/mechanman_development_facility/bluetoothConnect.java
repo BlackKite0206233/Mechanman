@@ -41,9 +41,6 @@ public class bluetoothConnect extends AppCompatActivity {
             if(myBluetooth.isEnabled()) {
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(BluetoothDevice.ACTION_FOUND);
-                filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-                filter.addAction(myBluetooth.ACTION_SCAN_MODE_CHANGED);
-                filter.addAction(myBluetooth.ACTION_STATE_CHANGED);
                 registerReceiver(myReceiver, filter);
                 myBluetooth.startDiscovery();
                 pairedDevicesList();

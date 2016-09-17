@@ -1,6 +1,7 @@
 package com.mechanman.mechanman_development_facility;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
+import com.mechanman.mechanman_development_facility.CountDownTimerPausable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText stopBathTXT;
     private EditText fixerTXT;
 
+    private int rememberStatus = 0;
+
     protected int prewettingTime;
     protected int developTotalTime;
     protected int developStopTime;
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected TextView timeCount;
 
-    CountDownTimer countDownTimer;
+    CountDownTimerPausable countDownTimerPausable;
     NumberFormat numberFormat;
 
     @Override
@@ -64,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<Integer> List = new ArrayList<Integer>();
-                assignWork(development, "顯影", "暫停", 1, List);
+                assignWork(development, "顯影", "暫停", 2, List);
                 List.clear();
             }
         });
@@ -97,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!"".equals(fixerTXT.getText().toString())) {
                     ArrayList<Integer> List = new ArrayList<Integer>();
                     fixerTime = Integer.parseInt(fixerTXT.getText().toString());
-                    List.add(stopBathTime);
+                    List.add(fixerTime);
                     assignWork(fixer, "定影", "暫停", 4, List);
                     List.clear();
                 }
@@ -128,26 +133,43 @@ public class MainActivity extends AppCompatActivity {
         fixerTXT = (EditText)findViewById(R.id.fixerTXT);
 
         timeCount = (TextView)findViewById(R.id.timeCount);
+        String string = "000";
+        timeCount.setText(string);
+
     }
 
     private void assignWork(Button button, String originalString, String changeString, int status, ArrayList<Integer> list) {
         numberFormat = new DecimalFormat("000");
 
-        countDownTimer = new CountDownTimer(list.get(0) * 1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
+        if(rememberStatus == 0 || rememberStatus != status) {
+            rememberStatus = status;
+            countDownTimerPausable = new CountDownTimerPausable() {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    String string = numberFormat.format(millisUntilFinished / 1000);
+                    timeCount.setText(string);
+                    if(millisUntilFinished / 1000 <= 10) {
+                        timeCount.setTextColor(Color.RED);
+                    } else {
+                        timeCount.setTextColor(Color.BLACK);
+                    }
+                }
 
-            @Override
-            public void onFinish() {
-                String string = numberFormat.format(0);
-                timeCount.setText(string);
-            }
-        };
+                @Override
+                public void onFinish() {
+                    countDownTimerPausable.millisInFuture = 0;
+                    String string = numberFormat.format(0);
+                    timeCount.setText(string);
+                }
+            };
+        }
+
 
         if(button.getText().toString().equals(originalString)) {
-
-            countDownTimer.start();
+            if(countDownTimerPausable.millisInFuture != list.get(0) * 1000) {
+                countDownTimerPausable.setCountDownTime(list.get(0) * 1000, 1000);
+            }
+            countDownTimerPausable.start();
 
             /*
             * code
@@ -157,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             button.setText(changeString);
         } else if(button.getText().toString().equals(changeString)) {
 
-            countDownTimer.cancel();
+            countDownTimerPausable.pause();
             /*
             * code
             * push pause to arduino with bluetooth
