@@ -1,5 +1,9 @@
 package com.mechanman.mechanman_development_facility;
 
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -14,6 +18,9 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import android.os.AsyncTask;
+import java.io.IOException;
+import java.util.UUID;
 
 import com.mechanman.mechanman_development_facility.CountDownTimerPausable;
 
@@ -32,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     private int rememberStatus = 0;
 
+    private boolean isBtConnect = false;
+
+    private ProgressDialog progress;
+
     protected int prewettingTime;
     protected int developTotalTime = 0;
     protected int developStopTime = 0;
@@ -42,11 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
     protected TextView timeCount;
 
-    CountDownTimerPausable countDownTimerPausable;
     NumberFormat numberFormat;
+    CountDownTimerPausable countDownTimerPausable;
+
+
     Intent intent = new Intent();
 
-    //Intent intent = getIntent();
+    String address;
+
+    BluetoothAdapter bluetoothAdapter = null;
+    BluetoothDevice device = null;
+    BluetoothSocket socket = null;
+
+    //static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -64,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent BTIntent = getIntent();
+        address = BTIntent.getExtras().getString("device_address");
+
+        new ConnectBT().execute();
 
         init();
 
@@ -100,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent.setClass(MainActivity.this, setDevelopTime.class);
                 startActivityForResult(intent, 0);
-                //startActivity(intent);
             }
         });
 
@@ -208,6 +231,47 @@ public class MainActivity extends AppCompatActivity {
 
             button.setText(originalString);
         }
+    }
+
+    private class ConnectBT extends AsyncTask<Void, Void, Void> {
+        private boolean connectSuccess = true;
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(MainActivity.this, "Connecting...", "Please wait!!!");
+        }
+
+        @Override
+        protected Void doInBackground(Void... devices) {
+            try {
+                if(socket == null || !isBtConnect) {
+                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    device = bluetoothAdapter.getRemoteDevice(address);
+                    UUID muuid = device.getUuids()[0].getUuid();
+                    socket = device.createInsecureRfcommSocketToServiceRecord(muuid);
+                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    socket.connect();
+                }
+            } catch (IOException e) {
+                connectSuccess = false;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if(!connectSuccess) {
+                Toast.makeText(getApplicationContext(), "Connection Failed. Is it a SPP Bluetooth? Try again.", Toast.LENGTH_LONG).show();
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_LONG).show();
+                isBtConnect = true;
+            }
+            progress.dismiss();
+        }
+
     }
 
 

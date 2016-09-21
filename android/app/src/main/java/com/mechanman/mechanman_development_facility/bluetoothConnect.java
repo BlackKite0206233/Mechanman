@@ -25,7 +25,6 @@ public class bluetoothConnect extends AppCompatActivity {
     ListView bluetoothDeviceList;
     private BluetoothAdapter myBluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
-    public static String EXTRA_ADDRESS = "device_address";
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -39,10 +38,10 @@ public class bluetoothConnect extends AppCompatActivity {
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
         if(myBluetooth != null) {
             if(myBluetooth.isEnabled()) {
+                myBluetooth.startDiscovery();
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(myReceiver, filter);
-                myBluetooth.startDiscovery();
                 pairedDevicesList();
 
             } else {
@@ -74,7 +73,9 @@ public class bluetoothConnect extends AppCompatActivity {
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
             Intent intent = new Intent(bluetoothConnect.this, MainActivity.class);
-            intent.putExtra(EXTRA_ADDRESS, address);
+            Bundle bundle = new Bundle();
+            bundle.putString("device_address", address);
+            intent.putExtras(bundle);
             startActivity(intent);
             finish();
         }
