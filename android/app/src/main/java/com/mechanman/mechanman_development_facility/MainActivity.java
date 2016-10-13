@@ -9,12 +9,15 @@ import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -60,12 +63,18 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent();
 
     String address;
+    String checkCode = "$2a$04$NcywggFZq1ktjuQ7n73l4.Q4KLVp6mGC8kNr7bALqBj2DJXNScFi2";
+    String ctrlCode;
+
+    boolean isPause = false;
 
     BluetoothAdapter bluetoothAdapter = null;
     BluetoothDevice device = null;
     BluetoothSocket socket = null;
 
-    //static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    InputStream socketIn = null;
+    OutputStream socketOut = null;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,17 +98,19 @@ public class MainActivity extends AppCompatActivity {
 
         new ConnectBT().execute();
 
+
+
+
+
         init();
 
         prewetting.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> List = new ArrayList<Integer>();
                 if(!"".equals(prewettingTXT.getText().toString())) {
                     prewettingTime = Integer.parseInt(prewettingTXT.getText().toString());
-                    List.add(prewettingTime);
-                    assignWork(prewetting, "預濕", "暫停", 1, List);
-                    List.clear();
+                    ctrlCode = "1:1:" + prewettingTXT.getText().toString();
+                    assignWork(prewetting, "預濕", "暫停", 1, prewettingTime);
                 }
             }
         });
@@ -108,13 +119,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(developTotalTime != 0) {
-                    ArrayList<Integer> List = new ArrayList<Integer>();
-                    List.add(developTotalTime);
-                    List.add(developStopTime);
-                    List.add(developRollingTime);
-                    List.add(developRollingSpeed);
-                    assignWork(development, "顯影", "暫停", 2, List);
-                    List.clear();
+                    ctrlCode = "1:2:" + Integer.toString(developTotalTime) + ":"
+                                    + Integer.toString(developStopTime) + ":"
+                                    + Integer.toString(developRollingTime) + ":"
+                                    + Integer.toString(developRollingSpeed);
+                    assignWork(development, "顯影", "暫停", 2, developTotalTime);
                 }
             }
         });
@@ -131,11 +140,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!"".equals(stopBathTXT.getText().toString())) {
-                    ArrayList<Integer> List = new ArrayList<Integer>();
                     stopBathTime = Integer.parseInt(stopBathTXT.getText().toString());
-                    List.add(stopBathTime);
-                    assignWork(stopBath, "急制", "暫停", 3, List);
-                    List.clear();
+                    ctrlCode = "1:3:" + stopBathTXT.getText().toString();
+                    assignWork(stopBath, "急制", "暫停", 3, stopBathTime);
                 }
             }
         });
@@ -144,11 +151,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!"".equals(fixerTXT.getText().toString())) {
-                    ArrayList<Integer> List = new ArrayList<Integer>();
                     fixerTime = Integer.parseInt(fixerTXT.getText().toString());
-                    List.add(fixerTime);
-                    assignWork(fixer, "定影", "暫停", 4, List);
-                    List.clear();
+                    ctrlCode = "1:4:" + fixerTXT.getText().toString();
+                    assignWork(fixer, "定影", "暫停", 4, fixerTime);
                 }
             }
         });
@@ -156,6 +161,14 @@ public class MainActivity extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                if(socket != null) {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                    }
+                }
+
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, StartActivity.class);
                 startActivity(intent);
@@ -182,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void assignWork(Button button, String originalString, String changeString, int status, ArrayList<Integer> list) {
+    private void assignWork(Button button, String originalString, String changeString, int status, int countTime) {
         numberFormat = new DecimalFormat("000");
 
         if(rememberStatus == 0 || rememberStatus != status) {
@@ -210,24 +223,40 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(button.getText().toString().equals(originalString)) {
-            if(countDownTimerPausable.millisInFuture != list.get(0) * 1000) {
-                countDownTimerPausable.setCountDownTime(list.get(0) * 1000, 1000);
+            if(countDownTimerPausable.millisInFuture != countTime * 1000) {
+                countDownTimerPausable.setCountDownTime(countTime * 1000, 1000);
             }
             countDownTimerPausable.start();
 
-            /*
-            * code
-            * push status and list to arduino with bluetooth
-            * */
+            try {
+                if(isPause) {
+                    socketOut.write("2".getBytes());
+                } else {
+                    socketOut.write(ctrlCode.getBytes());
+                }
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, StartActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
             button.setText(changeString);
         } else if(button.getText().toString().equals(changeString)) {
 
             countDownTimerPausable.pause();
-            /*
-            * code
-            * push pause to arduino with bluetooth
-            * */
+
+            try {
+                socketOut.write("0:".getBytes());
+                isPause = true;
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, StartActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
             button.setText(originalString);
         }
@@ -251,6 +280,8 @@ public class MainActivity extends AppCompatActivity {
                     socket = device.createInsecureRfcommSocketToServiceRecord(muuid);
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     socket.connect();
+                    socketIn = socket.getInputStream();
+                    socketOut = socket.getOutputStream();
                 }
             } catch (IOException e) {
                 connectSuccess = false;
@@ -267,6 +298,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
                 Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_LONG).show();
+                try {
+                    socketOut.write(checkCode.getBytes());
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, StartActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+
                 isBtConnect = true;
             }
             progress.dismiss();
