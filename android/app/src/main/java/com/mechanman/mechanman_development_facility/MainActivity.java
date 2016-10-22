@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     String checkCode = "$2a$04$NcywggFZq1ktjuQ7n73l4.Q4KLVp6mGC8kNr7bALqBj2DJXNScFi2";
     String ctrlCode;
 
-    boolean isPause = false;
 
     BluetoothAdapter bluetoothAdapter = null;
     BluetoothDevice device = null;
@@ -97,10 +96,6 @@ public class MainActivity extends AppCompatActivity {
         address = BTIntent.getExtras().getString("device_address");
 
         new ConnectBT().execute();
-
-
-
-
 
         init();
 
@@ -198,8 +193,7 @@ public class MainActivity extends AppCompatActivity {
     private void assignWork(Button button, String originalString, String changeString, int status, int countTime) {
         numberFormat = new DecimalFormat("000");
 
-        if(rememberStatus == 0 || rememberStatus != status) {
-            rememberStatus = status;
+        if(button.getText().toString().equals(originalString)) {
             countDownTimerPausable = new CountDownTimerPausable() {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -219,21 +213,11 @@ public class MainActivity extends AppCompatActivity {
                     timeCount.setText(string);
                 }
             };
-        }
-
-
-        if(button.getText().toString().equals(originalString)) {
-            if(countDownTimerPausable.millisInFuture != countTime * 1000) {
-                countDownTimerPausable.setCountDownTime(countTime * 1000, 1000);
-            }
+            countDownTimerPausable.setCountDownTime(countTime * 1000, 1000);
             countDownTimerPausable.start();
 
             try {
-                if(isPause) {
-                    socketOut.write("2".getBytes());
-                } else {
-                    socketOut.write(ctrlCode.getBytes());
-                }
+                socketOut.write(ctrlCode.getBytes());
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent();
@@ -245,11 +229,12 @@ public class MainActivity extends AppCompatActivity {
             button.setText(changeString);
         } else if(button.getText().toString().equals(changeString)) {
 
-            countDownTimerPausable.pause();
+            countDownTimerPausable.cancel();
+            String string = numberFormat.format(0);
+            timeCount.setText(string);
 
             try {
                 socketOut.write("0:".getBytes());
-                isPause = true;
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent();
