@@ -17,7 +17,7 @@ const int motor3 = 11;
 
 int delayTime;
 
-String ctrl[5] = {"", "", "", "", ""};
+String ctrl[5] = {""};
 char c;
 
 boolean isAct = true;
@@ -25,7 +25,6 @@ boolean isRead = true;
 
 void setup() {
   // put your setup code here, to run once:
-
   Serial.begin(9600);
   Serial.println("bluetooth begin");
   BT.begin(9600);
@@ -34,46 +33,34 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
     if(isConnect) {
         readCtrlCode();
         if(isRead) {
             isRead = false;
-            switch(ctrl[0].toInt()) {
-                case 0:
-                    Serial.println("stop");
-                    actStop();
-                    break;
-                case 1:
-                    Serial.println("start");
-                    act();
-                    break;
-                case 2:
-                    Serial.println("restart");
-                    restart();
-                    break;
-            }
+            if(!ctrl[0].toInt()) {
+                act();
+                isAct = true;
+            } else
+                isAct = false;
         }
         if(isAct) {
 
-        } else {
-            continue;
         }
-    } else {
+    } else
         checkConnect();
-    }
-}
-
-void actStop() {
-    isAct = false;
 }
 
 void act() {
-    switch(ctrl[1].toInt())
-}
-
-void restart() {
-
+    switch(ctrl[1].toInt()) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
 }
 
 void readCtrlCode() {
