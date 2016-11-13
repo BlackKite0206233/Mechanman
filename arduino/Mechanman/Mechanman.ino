@@ -5,7 +5,7 @@
 
 #include "Task.h"
 
-#define SPEED(speed) 1000000 / (36 * (60 + speed))
+#define SPEED(speed) (1000000 / (36 * (60 + speed)))
 
 #define RX 5
 #define TX 4
@@ -18,7 +18,7 @@
 #define MOTOR2 10
 #define MOTOR3 11
 
-#define V(motorV) 127 * (1 + sin(motorV * M_PI / 180);
+#define V(motorV) (127 * (1 + sin(motorV * M_PI / 180)))
 
 SoftwareSerial BT(RX, TX);
 
@@ -46,8 +46,6 @@ void setup() {
   Serial.begin(9600);
   Serial.println("bluetooth begin");
   BT.begin(9600);
-
-  dir = 0;
 }
 
 void loop() {
@@ -62,7 +60,7 @@ void loop() {
                 isAct = false;
         }
         if(isAct) {
-            if(!timeCount)
+            if(!tickTime)
                 tickTime = countTime = micros();
 
             if(micros() - tickTime >= delayTime) {
@@ -96,15 +94,15 @@ void loop() {
 void setAct(int type) {
     switch(type) {
         case 1:
-            task.setTask(ctrl[2], ctrl[3], ctrl[4]);
+            task.setTask(ctrl[2].toInt(), ctrl[3].toInt(), ctrl[4].toInt());
             delayTime = SPEED(ctrl[5].toInt());
             break;
         case 2:
-            task.setTask(ctrl[2], 50, 10);
+            task.setTask(ctrl[2].toInt(), 50, 10);
             delayTime = SPEED(0);
             break;
         default:
-            task.setTask(ctrl[2], 0, ctrl[2]);
+            task.setTask(ctrl[2].toInt(), 0, ctrl[2].toInt());
             delayTime = SPEED(0);
             break;
     }

@@ -16,12 +16,12 @@ class Task {
         Motor motor;
 
     public:
-        void Task();
+        Task();
         void setTask(int , int , int );
         void timeCount();
         void tick();
         void getMotorV(int *, int );
 
         int timeup();
-}
+};
 #endif

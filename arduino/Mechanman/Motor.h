@@ -11,7 +11,7 @@ class Motor {
         int getV(int );
         
         int dir;
-        int Motor[3];
+        int motor[3];
         int num = 3;
-}
+};
 #endif
